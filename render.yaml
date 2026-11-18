@@ -1,0 +1,27 @@
+# Render Blueprint for the SentinelOps API.
+services:
+  - type: web
+    name: sentinelops-api
+    runtime: docker
+    rootDir: services/sentinel-api
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: SENTINEL_DATABASE_URL   # Postgres connection string (for example Neon)
+        sync: false
+      - key: SENTINEL_INGEST_TOKEN   # machine token: the shop's telemetry push and automation (no human actions)
+        sync: false
+      - key: SENTINEL_AUTH_MODE      # people sign in; roles decide what they may do
+        value: operators
+      - key: SENTINEL_SESSION_SECRET # signs operator sessions; empty would disable sign-in
+        generateValue: true
+      - key: SENTINEL_BOOTSTRAP_ADMIN  # "username:password" for the first admin; used only while no operator exists
+        sync: false
+      - key: SENTINEL_EXECUTOR
+        value: mock
+      - key: SENTINEL_TRUSTED_PROXY_HOPS  # Render's proxy: the client address is the last X-Forwarded-For entry
+        value: "1"
+      - key: SENTINEL_PUBLIC_URL     # links in team notifications point at the dashboard
+        value: https://sentinelops-ai-lukk.onrender.com
+      - key: SENTINEL_SHOP_URL       # the monitored ShopSphere store; the dashboard sidebar links to it
+        value: https://shopsphere-demo-beta.vercel.app

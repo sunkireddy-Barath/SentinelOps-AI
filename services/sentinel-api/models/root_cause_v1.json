@@ -1,0 +1,139 @@
+{
+  "version": "root-cause-v1",
+  "algorithm": "random_forest",
+  "best_params": {
+    "max_depth": 12,
+    "min_samples_leaf": 1
+  },
+  "calibration": "isotonic, 5-fold",
+  "calibration_comparison": [
+    {
+      "probabilities": "uncalibrated",
+      "log_loss": 0.06,
+      "brier": 0.0277,
+      "macro_f1": 0.9618
+    },
+    {
+      "probabilities": "isotonic",
+      "log_loss": 0.0634,
+      "brier": 0.0235,
+      "macro_f1": 0.9613
+    },
+    {
+      "probabilities": "sigmoid",
+      "log_loss": 0.0657,
+      "brier": 0.0276,
+      "macro_f1": 0.9599
+    }
+  ],
+  "tau": 0.71,
+  "target_precision": 0.99,
+  "features": [
+    "err_recent",
+    "err_baseline",
+    "err_delta",
+    "log_p95_ratio",
+    "latency_only",
+    "version_changed",
+    "exception_ratio",
+    "fast_fail_ratio",
+    "timeout_match_share",
+    "timeouts_per_bad",
+    "share_504",
+    "log_volume_ratio",
+    "n_routes_affected",
+    "frac_routes_affected",
+    "n_unaffected",
+    "log_bad_median_ms",
+    "other_routes_log_p95_ratio"
+  ],
+  "classes": [
+    "no_fault",
+    "payment_provider_timeout",
+    "release_regression",
+    "slow_dependency",
+    "traffic_surge",
+    "unknown"
+  ],
+  "cv": [
+    {
+      "model": "random_forest",
+      "cv_macro_f1": 0.9638392518730938,
+      "cv_std": 0.006932358925336162,
+      "fit_seconds": 15.5
+    },
+    {
+      "model": "gradient_boosting",
+      "cv_macro_f1": 0.961313598501636,
+      "cv_std": 0.006193364554057786,
+      "fit_seconds": 54.8
+    },
+    {
+      "model": "logistic_regression",
+      "cv_macro_f1": 0.9264638617802061,
+      "cv_std": 0.014752282402140134,
+      "fit_seconds": 9.8
+    }
+  ],
+  "test_results": {
+    "A: in-distribution | learned model": {
+      "n": 1865,
+      "exact_accuracy": 0.976,
+      "macro_f1": 0.946,
+      "decision_accuracy": 0.986,
+      "incorrect_intervention_rate": 0.0,
+      "missed_actionable_rate": 0.014,
+      "coverage_named": 0.743
+    },
+    "A: in-distribution | rule engine": {
+      "n": 1865,
+      "exact_accuracy": 0.734,
+      "macro_f1": 0.616,
+      "decision_accuracy": 0.749,
+      "incorrect_intervention_rate": 0.093,
+      "missed_actionable_rate": 0.091,
+      "coverage_named": 0.669
+    },
+    "B: shifted | learned model": {
+      "n": 1793,
+      "exact_accuracy": 0.863,
+      "macro_f1": 0.828,
+      "decision_accuracy": 0.907,
+      "incorrect_intervention_rate": 0.009,
+      "missed_actionable_rate": 0.071,
+      "coverage_named": 0.63
+    },
+    "B: shifted | rule engine": {
+      "n": 1793,
+      "exact_accuracy": 0.559,
+      "macro_f1": 0.48,
+      "decision_accuracy": 0.601,
+      "incorrect_intervention_rate": 0.195,
+      "missed_actionable_rate": 0.108,
+      "coverage_named": 0.632
+    }
+  },
+  "data": {
+    "generator": "training/generator.py",
+    "train_seeds": [
+      0,
+      1500
+    ],
+    "testA_seeds": [
+      100000,
+      100400
+    ],
+    "testB_seeds": [
+      200000,
+      200400
+    ],
+    "train_rows": 7007,
+    "testA_rows": 1865,
+    "testB_rows": 1793
+  },
+  "environment": {
+    "python": "3.12.10",
+    "sklearn": "1.9.0",
+    "numpy": "2.2.6"
+  }
+}
